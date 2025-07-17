@@ -6,7 +6,7 @@ public class DynamicCameraEffects : MonoBehaviour
 {
     [Header("References")]
     public Transform target;
-    public PlayerController playerController;
+    public GrandmaAirControl grandmaController;
     private Rigidbody targetRb;
     private CinemachineCamera virtualCamera;
     private CinemachineCameraOffset cameraOffsetExtension;
