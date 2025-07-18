@@ -3,32 +3,31 @@ using UnityEngine.SceneManagement;
 
 public class GameOverUIManager : MonoBehaviour
 {
-    // Reference to the Game Over UI panel
+    // Game Over UI (Panel)
     public GameObject gameOverUI;
 
-    // Reference to the CanvasGroup for fading effects
+    // Fade In variables
     private CanvasGroup canvasGroup;
     public float fadeDuration = 1f;
+    public float delayValue = 1f;
 
     void Start()
     {
-        // The game over UI is inactive at the start
+        // Hidden on start
         gameOverUI.SetActive(false);
 
-        // Get CanvasGroup component
+        // Faded out on start
         canvasGroup = gameOverUI.GetComponent<CanvasGroup>();
-        if (canvasGroup == null)
-            canvasGroup = gameOverUI.AddComponent<CanvasGroup>();
         canvasGroup.alpha = 0f;
 
-        // Get GameManager singleton instance
+        // Link to singleton GameManager (if there are any restart issues this is probably the cause)
         if (GameManager.Instance != null)
             GameManager.Instance.gameOverUIManager = this;
     }
 
-    // Show the Game Over UI with delay and fade
     public void ShowGameOver()
     {
+        // Show Game Over after slight delay
         gameOverUI.SetActive(true);
         StartCoroutine(GameOverDelay());
     }
@@ -36,7 +35,7 @@ public class GameOverUIManager : MonoBehaviour
     private System.Collections.IEnumerator GameOverDelay()
     {
         // Wait for the delay
-        yield return new WaitForSecondsRealtime(1f);
+        yield return new WaitForSecondsRealtime(delayValue);
 
         // Game over activation
         yield return StartCoroutine(FadeInGameOverUI());
@@ -46,11 +45,11 @@ public class GameOverUIManager : MonoBehaviour
     private System.Collections.IEnumerator FadeInGameOverUI()
     {
         float elapsedTime = 0f;
-        while (elapsedTime < fadeDuration) // Incremental fade in
+        while (elapsedTime < fadeDuration)
         {
             elapsedTime += Time.unscaledDeltaTime; // Increment time
-            float t = elapsedTime / fadeDuration; // Calculate normalized time
-            canvasGroup.alpha = Mathf.SmoothStep(0, 1, t); // SmoothStep works like Lerp
+            float alphaValue = elapsedTime / fadeDuration; // As time passes, visibility increases
+            canvasGroup.alpha = Mathf.SmoothStep(0, 1, alphaValue); // SmoothStep works like Lerp
             yield return null;
         }
     }

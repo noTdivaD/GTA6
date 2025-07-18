@@ -2,12 +2,16 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Singleton instance
-    public static GameManager Instance { get; private set; }
-
-    // Game over states
+    // Game over variables
     private bool isGameOver = false;
     public GameOverUIManager gameOverUIManager;
+
+    // Singleton instance
+    public static GameManager Instance
+    {
+        get;
+        private set;
+    }
 
     void Awake()
     {
@@ -25,7 +29,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // Check if the game is over
+        // End of service if the game is over :(
         if (isGameOver)
             return;
 
@@ -34,25 +38,21 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        // Prevent multiple game over calls
+        // If already game over why game over again
         if (isGameOver)
             return;
 
-        // Set the game over state
         isGameOver = true;
 
-        // Show the Game Over UI
         if (gameOverUIManager != null)
             gameOverUIManager.ShowGameOver();
         else
-            Debug.LogWarning("GameOverUIManager is not assigned!");
+            Debug.LogWarning("singleton linking bug (GameManager.cs)");
     }
 
     public void ResetGameState()
     {
-        // Reset the game state
+        // Reset every state here
         isGameOver = false;
-
-        //TODO: Score reset, player position reset, etc.
     }
 }

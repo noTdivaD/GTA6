@@ -10,14 +10,14 @@ public class StartMenuUIManager : MonoBehaviour
 
     void Start()
     {
-        // Show the "Press Any Button" panel and hide the Start Menu
+        // Start with "Press Any Button"
         pressAnyButtonPanel.SetActive(true);
         startMenuPanel.SetActive(false);
     }
 
     void Update()
     {
-        // Check for any button pressed to show the Start Menu
+        // Check button press once
         if (!hasPressedButton && Input.anyKeyDown)
         {
             hasPressedButton = true;
@@ -27,7 +27,7 @@ public class StartMenuUIManager : MonoBehaviour
 
     private System.Collections.IEnumerator ShowStartMenu()
     {
-        // Press Any Button     Fade out
+        // Fade out
         CanvasGroup pressGroup = pressAnyButtonPanel.GetComponent<CanvasGroup>();
         if (pressGroup != null)
         {
@@ -35,16 +35,16 @@ public class StartMenuUIManager : MonoBehaviour
             while (t < 1f)
             {
                 t += Time.deltaTime;
-                pressGroup.alpha = Mathf.Lerp(1f, 0f, t);
+                pressGroup.alpha = Mathf.SmoothStep(1f, 0f, t);
                 yield return null;
             }
         }
 
-        // Hide the "Press Any Button" panel and show the Start Menu
+        // Switch scene
         pressAnyButtonPanel.SetActive(false);
         startMenuPanel.SetActive(true);
 
-        // Start Menu Fade In
+        // Fade in
         CanvasGroup menuGroup = startMenuPanel.GetComponent<CanvasGroup>();
         if (menuGroup != null)
         {
@@ -53,7 +53,7 @@ public class StartMenuUIManager : MonoBehaviour
             while (t < 1f)
             {
                 t += Time.deltaTime;
-                menuGroup.alpha = Mathf.Lerp(0f, 1f, t);
+                menuGroup.alpha = Mathf.SmoothStep(0f, 1f, t);
                 yield return null;
             }
         }
@@ -62,8 +62,8 @@ public class StartMenuUIManager : MonoBehaviour
     // Play Button
     public void PlayGame()
     {
-        // TODO: Load the game scene
-        //SceneManager.LoadScene("_______");
+        // remember to add the scene to build settings
+        SceneManager.LoadScene("Jawad");
     }
 
     // Quit Button
