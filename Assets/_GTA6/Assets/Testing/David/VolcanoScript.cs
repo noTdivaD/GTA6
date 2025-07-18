@@ -66,6 +66,7 @@ public class VolcanoScript : MonoBehaviour
         }
 
         // Heat death of the object
-        Destroy(otherRigidBody.gameObject);
+        if( otherRigidBody != null)
+            Destroy(otherRigidBody.gameObject);
     }
 }
