@@ -3,6 +3,10 @@ using UnityEngine.UI;
 
 public class ThrowController : MonoBehaviour
 {
+
+    private Animator animator;
+    private bool hasPlayedUppercut = false;
+
     [Header("References")]
     public LineRenderer lineRenderer;
     public GameObject grandmaObject;
@@ -28,6 +32,10 @@ public class ThrowController : MonoBehaviour
 
     void Start()
     {
+
+        animator = GetComponentInChildren<Animator>();
+
+
         // Show static straight line initially
         UpdateTrajectoryLine(0f);
 
@@ -38,6 +46,14 @@ public class ThrowController : MonoBehaviour
 
     void Update()
     {
+        if (!isDecidingDirection && Input.GetKeyDown(KeyCode.Space))
+        {
+            isDecidingDirection = true;
+            timer = 0f;
+            waitTime = Random.Range(2f, 5f);
+            hasPlayedUppercut = false; // reset animation trigger flag
+        }
+
         if (hasThrown) return;
 
         if (!isDecidingDirection)
@@ -50,6 +66,7 @@ public class ThrowController : MonoBehaviour
                 directionAngle = 0f;
                 directionSign = Random.Range(0, 2) == 0 ? -1 : 1;
                 hasLockedDirection = false;
+                hasPlayedUppercut = false;
 
                 if (throwTimerBar != null)
                     throwTimerBar.value = 0f;
@@ -66,7 +83,7 @@ public class ThrowController : MonoBehaviour
             if (throwTimerBar != null)
                 throwTimerBar.value = Mathf.Clamp01(timer / waitTime);
 
-            // Rotate until the pauseBeforeThrow moment
+            // Rotate direction while deciding
             if (timeLeft > pauseBeforeThrow)
             {
                 directionAngle += directionSign * directionChangeSpeed * Time.deltaTime;
@@ -91,7 +108,14 @@ public class ThrowController : MonoBehaviour
                 Debug.Log("Direction locked at " + directionAngle.ToString("F2") + "°");
             }
 
-            // Time's up → throw
+            // 🔥 Trigger animation just before throw
+            if (!hasPlayedUppercut && timer >= waitTime - 0.5f)
+            {
+                hasPlayedUppercut = true;
+                animator.SetTrigger("PlayUppercut");
+            }
+
+            // Time to throw
             if (timer >= waitTime)
             {
                 isDecidingDirection = false;
@@ -104,6 +128,7 @@ public class ThrowController : MonoBehaviour
             }
         }
     }
+
 
     void ThrowGrandma()
     {
