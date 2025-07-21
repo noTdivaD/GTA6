@@ -4,12 +4,14 @@ using UnityEngine.SceneManagement;
 public class GameOverUIManager : MonoBehaviour
 {
     // Game Over UI (Panel)
-    public GameObject gameOverUI;
+    [Header ("Panel Element")]
+    [SerializeField] private GameObject gameOverUI = null;
 
     // Fade In variables
-    private CanvasGroup canvasGroup;
-    public float fadeDuration = 1f;
-    public float delayValue = 1f;
+    [Header ("Transition Settings")]
+    [SerializeField] private CanvasGroup canvasGroup = null;
+    [SerializeField] private float fadeDuration = 1f;
+    [SerializeField] private float delayValue = 1f;
 
     void Start()
     {

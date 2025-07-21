@@ -3,14 +3,14 @@ using UnityEngine.SceneManagement;
 
 public class StartMenuUIManager : MonoBehaviour
 {
-    // Reference to the UI elements
-    public GameObject pressAnyButtonPanel;
-    public GameObject startMenuPanel;
-    private bool hasPressedButton = false;
+    // UI components and variables
+    [Header ("UI Elements")] 
+    [SerializeField] private GameObject pressAnyButtonPanel;
+    [SerializeField] private GameObject startMenuPanel;
+    [SerializeField] private bool hasPressedButton = false;
 
     void Start()
     {
-        // Start with "Press Any Button"
         pressAnyButtonPanel.SetActive(true);
         startMenuPanel.SetActive(false);
     }
