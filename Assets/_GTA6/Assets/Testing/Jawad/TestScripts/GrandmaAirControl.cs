@@ -3,6 +3,8 @@ using UnityEngine;
 public class GrandmaAirControl : MonoBehaviour
 {
     private Rigidbody rb;
+    private Animator animator;
+
     private bool isFlying = false;
     private bool hasLanded = false;
 
@@ -16,6 +18,7 @@ public class GrandmaAirControl : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     void FixedUpdate()
@@ -59,6 +62,11 @@ public class GrandmaAirControl : MonoBehaviour
         {
             rb.linearDamping = 0.5f;
             rb.angularDamping = 2f;
+        }
+
+        if (animator != null)
+        {
+            animator.SetTrigger("Fly");
         }
     }
 }
