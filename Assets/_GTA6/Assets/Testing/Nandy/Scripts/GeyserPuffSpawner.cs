@@ -31,7 +31,7 @@ public class GeyserPuffSpawner : MonoBehaviour
                 puffScript.moveDirection = moveDirection;
             }
             puff.SetActive(true);
-            Debug.Log("Spawned puff at: " + spawnPosition);
+            //Debug.Log("Spawned puff at: " + spawnPosition);
             timer = 0f;
         }
     }
