@@ -17,14 +17,14 @@ public class VolcanoScript : MonoBehaviour
             // Check if it's a player object
             if (other.CompareTag("Player"))
             {
-                // Disable player controls (fixing okay but optional the flush is strong enough)
+                // Disable player controls (fixing that is okay but optional because the flush should be strong enough)
                 //other.GetComponent<PlayerController>().enabled = false;
 
                 // Game over
                 GameManager.Instance.GameOver();
             }
 
-            // Disable gravity and start pulling
+            // Disable gravity and flush the object
             otherRigidBody.useGravity = false;
             StartCoroutine(VolcanoFlush(otherRigidBody));
         }
