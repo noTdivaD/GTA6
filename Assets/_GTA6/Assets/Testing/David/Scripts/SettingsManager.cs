@@ -10,12 +10,15 @@ public class SettingsManager : MonoBehaviour
     [Header("Volume Settings")]
     [SerializeField] private TMP_Text sliderText = null;
     [SerializeField] private Slider volumeSlider = null;
-    [SerializeField] private GameObject confirmationPrompt = null;
     [SerializeField] private GameObject settingsUI = null;
+
+    [Header("Post-Processing")]
+    [SerializeField] private Volume pauseVolume;
 
     public void Start()
     {
         settingsUI.SetActive(false);
+        pauseVolume.weight = 0f;
     }
 
     // Open Settings Menu
@@ -23,6 +26,7 @@ public class SettingsManager : MonoBehaviour
     {
         settingsUI.SetActive(true);
         Time.timeScale = 0f;
+        pauseVolume.weight = 1f;
     }
 
     // Close Settings Menu
@@ -30,6 +34,7 @@ public class SettingsManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         settingsUI.SetActive(false);
+        pauseVolume.weight = 0f;
     }
 
     // Volume Slider
@@ -49,12 +54,5 @@ public class SettingsManager : MonoBehaviour
     {
         PlayerPrefs.SetFloat("Volume", AudioListener.volume);
         PlayerPrefs.Save();
-    }
-
-    public IEnumerator ConfirmationBox()
-    {
-        confirmationPrompt.SetActive(true);
-        yield return new WaitForSecondsRealtime(2f);
-        confirmationPrompt.SetActive(false);
     }
 }
