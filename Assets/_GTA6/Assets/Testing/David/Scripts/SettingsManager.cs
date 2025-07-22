@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class SettingsManager : MonoBehaviour
 {
-
-    // Volume settings
     [Header("Volume Settings")]
     [SerializeField] private TMP_Text sliderText = null;
     [SerializeField] private Slider volumeSlider = null;
@@ -15,6 +15,20 @@ public class SettingsManager : MonoBehaviour
 
     public void Start()
     {
+        settingsUI.SetActive(false);
+    }
+
+    // Open Settings Menu
+    public void OpenSettings()
+    {
+        settingsUI.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    // Close Settings Menu
+    public void CloseSettings()
+    {
+        Time.timeScale = 1f;
         settingsUI.SetActive(false);
     }
 
@@ -40,7 +54,7 @@ public class SettingsManager : MonoBehaviour
     public IEnumerator ConfirmationBox()
     {
         confirmationPrompt.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSecondsRealtime(2f);
         confirmationPrompt.SetActive(false);
     }
 }
