@@ -2,24 +2,60 @@ using UnityEngine;
 
 public class GrandmaAirControl : MonoBehaviour
 {
+
+    public ParticleSystem boostParticles;
+
+
+    private float lastDiveHeight;
+    private bool isDiving = false;
+
     private Rigidbody rb;
     private Animator animator;
 
     private bool isFlying = false;
     private bool hasLanded = false;
 
+    [Header("Visual Tilt Settings")]
+    public Transform grandmaModel; // assign in Inspector
+    public float tiltAngle = 20f;  // max tilt angle in degrees
+    public float tiltSpeed = 5f;   // how fast to tilt and return
+
+
+
     [Header("Air Control Settings")]
     public float strafeForce = 2f;
-    public float forwardGlideForce = 4f; // increase glide speed
+    public float forwardGlideForce = 4f;
     public float maxHorizontalSpeed = 7f;
     public LayerMask groundLayer;
     public float groundCheckDistance = 1f;
+
+    [Header("New Mechanics")]
+    public float boostForce = 60f;
+    public float diveForce = 25f;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
     }
+
+    void Update()
+    {
+        if (!isFlying || hasLanded) return;
+
+        float horizontalInput = Input.GetAxis("Horizontal");
+
+        // Determine target tilt angle
+        float targetZRotation = -horizontalInput * tiltAngle;
+
+        // Apply tilt to grandma model only (smoothly)
+        if (grandmaModel != null)
+        {
+            Quaternion targetRotation = Quaternion.Euler(0f, 0f, targetZRotation);
+            grandmaModel.localRotation = Quaternion.Lerp(grandmaModel.localRotation, targetRotation, Time.deltaTime * tiltSpeed);
+        }
+    }
+
 
     void FixedUpdate()
     {
@@ -31,6 +67,21 @@ public class GrandmaAirControl : MonoBehaviour
         Vector3 forward = transform.forward * forwardGlideForce;
         Vector3 airControl = strafe + forward;
 
+        // Boost visual (W key)
+        if (Input.GetKey(KeyCode.W))
+        {
+            Vector3 boost = transform.forward * boostForce;
+            rb.AddForce(boost, ForceMode.Acceleration);
+
+            if (boostParticles != null && !boostParticles.isPlaying)
+                boostParticles.Play();
+        }
+        else
+        {
+            if (boostParticles != null && boostParticles.isPlaying)
+                boostParticles.Stop();
+        }
+
         rb.AddForce(airControl * Time.fixedDeltaTime * 60f, ForceMode.Force);
 
         // Clamp horizontal speed
@@ -41,7 +92,7 @@ public class GrandmaAirControl : MonoBehaviour
             rb.linearVelocity = new Vector3(limited.x, rb.linearVelocity.y, limited.z);
         }
 
-        // Check if she hit the ground
+        // Ground check
         if (Physics.Raycast(transform.position, Vector3.down, groundCheckDistance, groundLayer))
         {
             hasLanded = true;
@@ -49,9 +100,14 @@ public class GrandmaAirControl : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
             rb.constraints = RigidbodyConstraints.FreezeAll;
 
+            if (boostParticles != null)
+                boostParticles.Stop();
+
             Debug.Log("Grandma has landed!");
         }
     }
+
+
 
     public void StartFlying()
     {
