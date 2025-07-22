@@ -3,8 +3,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     // Game over variables
-    private bool isGameOver = false;
-    public GameOverUIManager gameOverUIManager;
+    [Header("Game Over settings")]
+    [SerializeField] private bool isGameOver = false;
+    [SerializeField] public GameOverUIManager gameOverUIManager;
 
     // Singleton instance
     public static GameManager Instance

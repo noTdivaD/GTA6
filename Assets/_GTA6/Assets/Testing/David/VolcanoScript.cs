@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class VolcanoScript : MonoBehaviour
 {
-    public float pullForce = 1f;
-    public float spiralSpeed = 2f;
-    public float flushSpeed = 3f;
-    public float shakeAmount = 0.01f;
-    public Vector3 flushScale = Vector3.zero;
+    [Header("Flush settings")]
+    [SerializeField] private float pullForce = 1f;
+    [SerializeField] private float spiralSpeed = 2f;
+    [SerializeField] private float flushSpeed = 3f;
+    [SerializeField] private float shakeAmount = 0.01f;
 
     void OnTriggerEnter(Collider other)
     {
@@ -78,7 +78,7 @@ public class VolcanoScript : MonoBehaviour
             // Shrink it too
             otherRigidBody.transform.localScale = Vector3.Lerp(
                 otherRigidBody.transform.localScale,
-                flushScale,
+                Vector3.zero,
                 flushSpeed * Time.deltaTime
             );
 
