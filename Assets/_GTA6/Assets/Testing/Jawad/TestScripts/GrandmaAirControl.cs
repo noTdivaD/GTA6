@@ -2,9 +2,7 @@ using UnityEngine;
 
 public class GrandmaAirControl : MonoBehaviour
 {
-
     public ParticleSystem boostParticles;
-
 
     private float lastDiveHeight;
     private bool isDiving = false;
@@ -19,8 +17,6 @@ public class GrandmaAirControl : MonoBehaviour
     public Transform grandmaModel; // assign in Inspector
     public float tiltAngle = 20f;  // max tilt angle in degrees
     public float tiltSpeed = 5f;   // how fast to tilt and return
-
-
 
     [Header("Air Control Settings")]
     public float strafeForce = 2f;
@@ -56,7 +52,6 @@ public class GrandmaAirControl : MonoBehaviour
         }
     }
 
-
     void FixedUpdate()
     {
         if (!isFlying || hasLanded) return;
@@ -67,7 +62,7 @@ public class GrandmaAirControl : MonoBehaviour
         Vector3 forward = transform.forward * forwardGlideForce;
         Vector3 airControl = strafe + forward;
 
-        // Boost visual (W key)
+        // Boost (W key)
         if (Input.GetKey(KeyCode.W))
         {
             Vector3 boost = transform.forward * boostForce;
@@ -80,6 +75,26 @@ public class GrandmaAirControl : MonoBehaviour
         {
             if (boostParticles != null && boostParticles.isPlaying)
                 boostParticles.Stop();
+        }
+
+        // Dive (Ctrl key)
+        if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+        {
+            Vector3 diveDirection = (transform.forward + Vector3.down).normalized;
+            rb.AddForce(diveDirection * diveForce, ForceMode.Acceleration);
+
+            lastDiveHeight = transform.position.y;
+            isDiving = true;
+        }
+        else if (isDiving)
+        {
+            // Maintain glide at dive level
+            Vector3 currentVelocity = rb.linearVelocity;
+            if (transform.position.y < lastDiveHeight)
+            {
+                rb.linearVelocity = new Vector3(currentVelocity.x, 0f, currentVelocity.z);
+            }
+            isDiving = false;
         }
 
         rb.AddForce(airControl * Time.fixedDeltaTime * 60f, ForceMode.Force);
