@@ -19,7 +19,7 @@ public class GrandmaAirControl : MonoBehaviour
     public float tiltSpeed = 5f;   // how fast to tilt and return
 
     [Header("Air Control Settings")]
-    public float strafeForce = 2f;
+    public float strafeForce = 8f;
     public float forwardGlideForce = 4f;
     public float maxHorizontalSpeed = 7f;
     public LayerMask groundLayer;
@@ -58,11 +58,18 @@ public class GrandmaAirControl : MonoBehaviour
 
         float input = Input.GetAxis("Horizontal");
 
-        Vector3 strafe = transform.right * input * strafeForce;
-        Vector3 forward = transform.forward * forwardGlideForce;
-        Vector3 airControl = strafe + forward;
+        // Immediate left/right strafing — override X/Z velocity directly
+        Vector3 currentVelocity = rb.linearVelocity;
+        Vector3 desiredStrafe = transform.right * input * strafeForce;
 
-        // Boost (W key)
+        // Keep Y velocity untouched, override only horizontal direction
+        rb.linearVelocity = new Vector3(desiredStrafe.x, currentVelocity.y, desiredStrafe.z + currentVelocity.z);
+
+        // Constant forward glide
+        Vector3 glide = transform.forward * forwardGlideForce;
+        rb.AddForce(glide * Time.fixedDeltaTime * 60f, ForceMode.Force);
+
+        // Boost forward (W)
         if (Input.GetKey(KeyCode.W))
         {
             Vector3 boost = transform.forward * boostForce;
@@ -77,7 +84,7 @@ public class GrandmaAirControl : MonoBehaviour
                 boostParticles.Stop();
         }
 
-        // Dive (Ctrl key)
+        // Dive
         if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
         {
             Vector3 diveDirection = (transform.forward + Vector3.down).normalized;
@@ -88,16 +95,12 @@ public class GrandmaAirControl : MonoBehaviour
         }
         else if (isDiving)
         {
-            // Maintain glide at dive level
-            Vector3 currentVelocity = rb.linearVelocity;
             if (transform.position.y < lastDiveHeight)
             {
-                rb.linearVelocity = new Vector3(currentVelocity.x, 0f, currentVelocity.z);
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             }
             isDiving = false;
         }
-
-        rb.AddForce(airControl * Time.fixedDeltaTime * 60f, ForceMode.Force);
 
         // Clamp horizontal speed
         Vector3 horizontalVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
@@ -121,6 +124,9 @@ public class GrandmaAirControl : MonoBehaviour
             Debug.Log("Grandma has landed!");
         }
     }
+
+
+
 
 
 

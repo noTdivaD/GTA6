@@ -1236,6 +1236,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4371456980935992422, guid: 97846e0850375fc43a67eb20e8881c40, type: 3}
+      propertyPath: strafeForce
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1301,10 +1305,6 @@ PrefabInstance:
       propertyPath: throwTimerBar
       value: 
       objectReference: {fileID: 998302096}
-    - target: {fileID: 4387395610846834196, guid: f923bd4be287f1f4a965e6cf4d2a20a1, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: ccf57512f2e98dc44a581a0f268fcb77, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
