@@ -9,10 +9,19 @@ public class CameraTiltPivot : MonoBehaviour
     public float returnDelay = 0.5f;
     public float returnSpeed = 4f;
 
+    [Header("Default Rotation")]
+    public float defaultPitch = 20f;
+
     private float pitch = 0f;
     private float returnTimer = 0f;
     private bool isReturning = false;
 
+    void Start()
+    {
+        // Start from the default rotation
+        pitch = defaultPitch;
+        ApplyRotation();
+    }
     void Update()
     {
         bool rmbHeld = Input.GetMouseButton(1);
@@ -39,12 +48,12 @@ public class CameraTiltPivot : MonoBehaviour
 
             if (isReturning)
             {
-                pitch = Mathf.Lerp(pitch, 0f, Time.deltaTime * returnSpeed);
+                pitch = Mathf.Lerp(pitch, defaultPitch, Time.deltaTime * returnSpeed);
                 ApplyRotation();
 
-                if (Mathf.Abs(pitch) < 0.1f)
+                if (Mathf.Abs(pitch - defaultPitch) < 0.1f)
                 {
-                    pitch = 0f;
+                    pitch = defaultPitch;
                     isReturning = false;
                 }
             }

@@ -39,13 +39,22 @@ public class DynamicCameraEffects : MonoBehaviour
     public float returnSpeed = 2f;
     public float shoulderTiltMultiplier = 0.5f;
 
-
+    [Header("5. FOV Boost by Horizontal Force")]
+    public float baseFOV = 40f;
+    public float maxFOVBoost = 10f;
+    public float fovLerpSpeed = 5f;
+    public float maxHorizontalForce = 20f; // The horizontal force that maps to full boost
 
 
     private float currentShoulderY;
     private float defaultShoulderY;
     private float returnTimer = 0f;
     private bool isReturning = false;
+
+    private Vector3 smoothedAcceleration;
+    public float accelerationSmoothTime = 0.1f;
+    private Vector3 accelSmoothVelocity;
+
 
     void Start()
     {
@@ -69,6 +78,10 @@ public class DynamicCameraEffects : MonoBehaviour
         }
         defaultShoulderY = thirdPersonFollow.ShoulderOffset.y;
         currentShoulderY = defaultShoulderY;
+
+        float speed = targetRb.linearVelocity.magnitude;
+        float speedPercent = Mathf.Clamp01(speed / maxSpeedForZoom);
+        thirdPersonFollow.CameraDistance = Mathf.Lerp(minDistance, maxDistance, speedPercent);
     }
 
     void LateUpdate()
@@ -179,6 +192,48 @@ public class DynamicCameraEffects : MonoBehaviour
                 returnTimer = 0f;
             }
         }
+        //// 5. FOV Boost by Horizontal Force
+        //Vector3 horizontalForce = new Vector3(acceleration.x, 0f, acceleration.z);
+        //float horizontalForceMag = horizontalForce.magnitude;
+
+        //float forcePercent = Mathf.Clamp01(horizontalForceMag / maxHorizontalForce);
+        //float targetFOV = baseFOV + (forcePercent * maxFOVBoost);
+
+        //virtualCamera.Lens.FieldOfView = Mathf.Lerp(
+        //    virtualCamera.Lens.FieldOfView,
+        //    targetFOV,
+        //    Time.deltaTime * fovLerpSpeed
+        //);
+        // Smooth the acceleration first
+        smoothedAcceleration = Vector3.SmoothDamp(
+            smoothedAcceleration,
+            acceleration,
+            ref accelSmoothVelocity,
+            accelerationSmoothTime
+        );
+
+        // Get the forward direction of the camera or character on the horizontal plane
+        Vector3 flatForward = virtualCamera.transform.forward;
+        flatForward.y = 0f;
+        flatForward.Normalize();
+
+        // Project the smoothed acceleration onto the forward vector
+        float forwardForceMag = Vector3.Dot(smoothedAcceleration, flatForward);
+
+        // Use only positive (forward) force — ignore backward
+        forwardForceMag = Mathf.Max(forwardForceMag, 0f);
+
+        // Map to FOV boost
+        float forcePercent = Mathf.Clamp01(forwardForceMag / maxHorizontalForce);
+        float targetFOV = baseFOV + (forcePercent * maxFOVBoost);
+
+        // Apply smoothed FOV transition
+        virtualCamera.Lens.FieldOfView = Mathf.Lerp(
+            virtualCamera.Lens.FieldOfView,
+            targetFOV,
+            Time.deltaTime * fovLerpSpeed
+        );
+
     }
     void ApplyShoulderOffset(float yValue)
     {
