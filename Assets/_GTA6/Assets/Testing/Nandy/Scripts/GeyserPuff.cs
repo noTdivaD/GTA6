@@ -11,6 +11,7 @@ public class GeyserPuff : MonoBehaviour
     public float riseSpeed = 1f;
     public float yRotationSpeed = 180f; // Degrees per second
     public Vector2 xScaleRange = new Vector2(0.6f, 1.2f); // Range of random X scale
+    public Vector2 yScaleRange = new Vector2(0.6f, 1.2f); // same for Y scale, if needed
 
     [HideInInspector]
     public Vector3 moveDirection = Vector3.up; // Default to up
@@ -57,12 +58,15 @@ public class GeyserPuff : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
-    public void Setup(float riseSpeed, float lifetime, float yRotationSpeed, Vector2 xScaleRange, Vector3 moveDir)
+    public void Setup(float riseSpeed, float lifetime, float yRotationSpeed, Vector2 xScaleRange, Vector2 yScaleRange, Vector3 moveDir, Color color)
     {
         this.riseSpeed = riseSpeed;
         this.lifetime = lifetime;
         this.yRotationSpeed = yRotationSpeed;
-        this.xScaleRange = xScaleRange;
+        float randomXScale = Random.Range(xScaleRange.x, xScaleRange.y);
+        float randomYScale = Random.Range(yScaleRange.x, yScaleRange.y);
+        transform.localScale = new Vector3(randomXScale, randomYScale, 1f);
         this.moveDirection = moveDir;
+        spriteRenderer.color = color;
     }
 }
