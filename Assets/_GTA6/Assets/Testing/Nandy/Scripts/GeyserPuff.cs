@@ -57,4 +57,12 @@ public class GeyserPuff : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+    public void Setup(float riseSpeed, float lifetime, float yRotationSpeed, Vector2 xScaleRange, Vector3 moveDir)
+    {
+        this.riseSpeed = riseSpeed;
+        this.lifetime = lifetime;
+        this.yRotationSpeed = yRotationSpeed;
+        this.xScaleRange = xScaleRange;
+        this.moveDirection = moveDir;
+    }
 }

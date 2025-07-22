@@ -6,11 +6,18 @@ public class GeyserPuffSpawner : MonoBehaviour
     public ObjectPool puffPool;
     public float spawnInterval = 0.1f;
     public Transform spawnPoint;
-    public Vector3 moveDirection = Vector3.up; // Can set to Vector3.down in Inspecto
     public float spawnRadius = 0.5f;
 
-    private float timer;
+    [Header("Puff Settings")]
+    public float puffRiseSpeed = 1f;
+    public float puffLifetime = 1.5f;
+    public float puffYRotationSpeed = 180f;
+    public Vector2 puffXScaleRange = new Vector2(0.6f, 1.2f);
+    public Vector3 moveDirection = Vector3.up; // Can set to Vector3.down in Inspecto
 
+
+
+    private float timer;
     void Update()
     {
         timer += Time.deltaTime;
@@ -28,7 +35,7 @@ public class GeyserPuffSpawner : MonoBehaviour
             GeyserPuff puffScript = puff.GetComponent<GeyserPuff>();
             if (puffScript != null)
             {
-                puffScript.moveDirection = moveDirection;
+                puffScript.Setup(puffRiseSpeed, puffLifetime, puffYRotationSpeed, puffXScaleRange, moveDirection);
             }
             puff.SetActive(true);
             //Debug.Log("Spawned puff at: " + spawnPosition);
