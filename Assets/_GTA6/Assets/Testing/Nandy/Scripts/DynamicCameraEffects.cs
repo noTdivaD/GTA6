@@ -234,6 +234,11 @@ public class DynamicCameraEffects : MonoBehaviour
             Time.deltaTime * fovLerpSpeed
         );
 
+        // Lock camera rotation around Z (roll) axis to prevent side tilt
+        Vector3 targetEuler = target.rotation.eulerAngles;
+        targetEuler.z = 0f;
+        target.rotation = Quaternion.Euler(targetEuler);
+
     }
     void ApplyShoulderOffset(float yValue)
     {
