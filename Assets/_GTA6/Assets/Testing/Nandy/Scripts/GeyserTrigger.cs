@@ -14,16 +14,12 @@ public class GeyserTrigger : MonoBehaviour
         if (other.CompareTag(playerTag))
         {
             Rigidbody rb = other.attachedRigidbody;
-            if (rb != null && !other.GetComponent<TimedForceApplier>())
+            if (rb != null)
             {
                 Vector3 launchDirection = Vector3.up * upwardForce + other.transform.forward * forwardForce;
 
-                // Attach the TimedForceApplier to apply force over time
-                var applier = other.gameObject.AddComponent<TimedForceApplier>();
-                applier.forceToApply = launchDirection;
-                applier.duration = forceApplyDuration;
-
-                Debug.Log("Grandma boosted smoothly by geyser!");
+                TimedForceApplier applier = other.gameObject.AddComponent<TimedForceApplier>();
+                applier.ApplyForce(launchDirection, forceApplyDuration); // Apply over 0.15 seconds
             }
         }
     }
