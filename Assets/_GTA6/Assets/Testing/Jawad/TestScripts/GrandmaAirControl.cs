@@ -46,14 +46,21 @@ public class GrandmaAirControl : MonoBehaviour
 
         float horizontalInput = Input.GetAxis("Horizontal");
 
-        // Determine target tilt angle
+        // --- Tilt the model (Z-axis lean) ---
         float targetZRotation = -horizontalInput * tiltAngle;
 
-        // Apply tilt to grandma model only (smoothly)
         if (grandmaModel != null)
         {
-            Quaternion targetRotation = Quaternion.Euler(0f, 0f, targetZRotation);
-            grandmaModel.localRotation = Quaternion.Lerp(grandmaModel.localRotation, targetRotation, Time.deltaTime * tiltSpeed);
+            Quaternion targetTilt = Quaternion.Euler(0f, 0f, targetZRotation);
+            grandmaModel.localRotation = Quaternion.Lerp(grandmaModel.localRotation, targetTilt, Time.deltaTime * tiltSpeed);
+        }
+
+        // --- Rotate model to face input direction (Yaw) ---
+        Vector3 moveInput = new Vector3(horizontalInput, 0f, 1f); // forward + left/right
+        if (moveInput.magnitude > 0.1f)
+        {
+            Quaternion targetYaw = Quaternion.LookRotation(moveInput.normalized, Vector3.up);
+            grandmaModel.rotation = Quaternion.Lerp(grandmaModel.rotation, targetYaw, Time.deltaTime * tiltSpeed);
         }
     }
 

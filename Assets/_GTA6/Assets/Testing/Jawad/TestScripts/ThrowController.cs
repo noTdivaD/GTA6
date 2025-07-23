@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,6 +6,12 @@ public class ThrowController : MonoBehaviour
 {
     private Animator animator;
     private bool hasPlayedUppercut = false;
+
+
+    [Header("Trajectory Sphere Settings")]
+    public GameObject trajectorySpherePrefab;
+    public int maxSpheres = 30;
+    private List<GameObject> trajectorySpheres = new List<GameObject>();
 
     [Header("References")]
     public LineRenderer lineRenderer;
@@ -32,41 +39,37 @@ public class ThrowController : MonoBehaviour
     void Start()
     {
         animator = GetComponentInChildren<Animator>();
-        UpdateTrajectoryLine();
-        if (throwTimerBar != null) throwTimerBar.value = 0f;
+
+        // Hide trajectory at the beginning
+        HideTrajectory();
+
+        if (throwTimerBar != null)
+            throwTimerBar.value = 0f;
     }
 
     void Update()
     {
+        if (hasThrown) return;
+
         if (!isDecidingDirection && Input.GetKeyDown(KeyCode.Space))
         {
             isDecidingDirection = true;
             timer = 0f;
             waitTime = Random.Range(2f, 5f);
+            directionAngle = 0f;
+            directionSign = Random.Range(0, 2) == 0 ? -1 : 1;
+            hasLockedDirection = false;
             hasPlayedUppercut = false;
+
+            if (throwTimerBar != null)
+                throwTimerBar.value = 0f;
+
+            lineRenderer.enabled = true;
+
+            Debug.Log("Demon is deciding... Throwing in " + waitTime.ToString("F2") + " seconds.");
         }
 
-        if (hasThrown) return;
-
-        if (!isDecidingDirection)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                isDecidingDirection = true;
-                waitTime = Random.Range(2f, 5f);
-                timer = 0f;
-                directionAngle = 0f;
-                directionSign = Random.Range(0, 2) == 0 ? -1 : 1;
-                hasLockedDirection = false;
-                hasPlayedUppercut = false;
-
-                if (throwTimerBar != null)
-                    throwTimerBar.value = 0f;
-
-                Debug.Log("Demon is deciding... Throwing in " + waitTime.ToString("F2") + " seconds.");
-            }
-        }
-        else
+        if (isDecidingDirection)
         {
             timer += Time.deltaTime;
             float timeLeft = waitTime - timer;
@@ -104,11 +107,12 @@ public class ThrowController : MonoBehaviour
                 animator.SetTrigger("PlayUppercut");
             }
 
+            // ✅ Throw only after full waitTime
             if (timer >= waitTime)
             {
                 isDecidingDirection = false;
-                ThrowGrandma();
                 hasThrown = true;
+                ThrowGrandma();
                 HideTrajectory();
 
                 if (throwTimerBar != null)
@@ -116,6 +120,7 @@ public class ThrowController : MonoBehaviour
             }
         }
     }
+
 
     void ThrowGrandma()
     {
@@ -162,25 +167,36 @@ public class ThrowController : MonoBehaviour
 
     void UpdateTrajectoryLine()
     {
-        Vector3 velocity = GetLaunchDirection().normalized * throwForce;
+        // Clear old spheres
+        foreach (var sphere in trajectorySpheres)
+        {
+            Destroy(sphere);
+        }
+        trajectorySpheres.Clear();
 
-        lineRenderer.positionCount = trajectoryPoints;
-        Vector3[] points = new Vector3[trajectoryPoints];
+        Vector3 velocity = GetLaunchDirection().normalized * throwForce;
 
         for (int i = 0; i < trajectoryPoints; i++)
         {
             float t = i * timeStep;
             Vector3 point = throwPoint.position + velocity * t + 0.5f * Physics.gravity * t * t;
-            points[i] = point;
-        }
 
-        lineRenderer.SetPositions(points);
+            GameObject sphere = Instantiate(trajectorySpherePrefab, point, Quaternion.identity);
+            sphere.transform.localScale = Vector3.one * 0.2f; // Adjust size
+            trajectorySpheres.Add(sphere);
+        }
     }
+
 
     void HideTrajectory()
     {
-        lineRenderer.positionCount = 0;
+        foreach (var sphere in trajectorySpheres)
+        {
+            Destroy(sphere);
+        }
+        trajectorySpheres.Clear();
     }
+
     // Helper to get launch direction
     private Vector3 GetLaunchDirection()
     {

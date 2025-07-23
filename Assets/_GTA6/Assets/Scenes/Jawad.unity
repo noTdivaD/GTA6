@@ -1301,6 +1301,10 @@ PrefabInstance:
       propertyPath: throwTimerBar
       value: 
       objectReference: {fileID: 998302096}
+    - target: {fileID: 753646711663898215, guid: f923bd4be287f1f4a965e6cf4d2a20a1, type: 3}
+      propertyPath: trajectorySpherePrefab
+      value: 
+      objectReference: {fileID: 1850763270839457919, guid: 0aca5ab6c707ef444961a0a9162ba506, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
