@@ -139,6 +139,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0420e05de51c3bf47a9398e9f06ce361, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  trajectorySpherePrefab: {fileID: 1850763270839457919, guid: 0aca5ab6c707ef444961a0a9162ba506, type: 3}
+  maxSpheres: 30
   lineRenderer: {fileID: 6376232347564124029}
   grandmaObject: {fileID: 0}
   throwPoint: {fileID: 1814665943402698075}
@@ -149,6 +151,7 @@ MonoBehaviour:
   timeStep: 0.1
   directionChangeSpeed: 40
   pauseBeforeThrow: 0.5
+  throwElevation: 45
 --- !u!1 &612987877414446837
 GameObject:
   m_ObjectHideFlags: 0
