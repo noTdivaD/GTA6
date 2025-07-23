@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 public class ThrowController : MonoBehaviour
 {
-
     private Animator animator;
     private bool hasPlayedUppercut = false;
 
@@ -21,7 +20,6 @@ public class ThrowController : MonoBehaviour
     public float directionChangeSpeed = 40f;
     public float pauseBeforeThrow = 0.5f;
 
-    // Internal State
     private float directionAngle = 0f;
     private bool hasThrown = false;
     private bool isDecidingDirection = false;
@@ -29,19 +27,13 @@ public class ThrowController : MonoBehaviour
     private float waitTime = 0f;
     private float timer = 0f;
     private int directionSign = 1;
+    public float throwElevation = 45f; // <-- Make this public and set a default
 
     void Start()
     {
-
         animator = GetComponentInChildren<Animator>();
-
-
-        // Show static straight line initially
-        UpdateTrajectoryLine(0f);
-
-        // Reset progress bar
-        if (throwTimerBar != null)
-            throwTimerBar.value = 0f;
+        UpdateTrajectoryLine();
+        if (throwTimerBar != null) throwTimerBar.value = 0f;
     }
 
     void Update()
@@ -51,7 +43,7 @@ public class ThrowController : MonoBehaviour
             isDecidingDirection = true;
             timer = 0f;
             waitTime = Random.Range(2f, 5f);
-            hasPlayedUppercut = false; // reset animation trigger flag
+            hasPlayedUppercut = false;
         }
 
         if (hasThrown) return;
@@ -79,11 +71,9 @@ public class ThrowController : MonoBehaviour
             timer += Time.deltaTime;
             float timeLeft = waitTime - timer;
 
-            // Update progress bar
             if (throwTimerBar != null)
                 throwTimerBar.value = Mathf.Clamp01(timer / waitTime);
 
-            // Rotate direction while deciding
             if (timeLeft > pauseBeforeThrow)
             {
                 directionAngle += directionSign * directionChangeSpeed * Time.deltaTime;
@@ -99,23 +89,21 @@ public class ThrowController : MonoBehaviour
                     directionSign = 1;
                 }
 
-                UpdateTrajectoryLine(directionAngle);
+                UpdateTrajectoryLine();
             }
             else if (!hasLockedDirection)
             {
                 hasLockedDirection = true;
-                UpdateTrajectoryLine(directionAngle); // Freeze line
+                UpdateTrajectoryLine();
                 Debug.Log("Direction locked at " + directionAngle.ToString("F2") + "°");
             }
 
-            // 🔥 Trigger animation just before throw
             if (!hasPlayedUppercut && timer >= waitTime - 0.5f)
             {
                 hasPlayedUppercut = true;
                 animator.SetTrigger("PlayUppercut");
             }
 
-            // Time to throw
             if (timer >= waitTime)
             {
                 isDecidingDirection = false;
@@ -129,57 +117,52 @@ public class ThrowController : MonoBehaviour
         }
     }
 
-
     void ThrowGrandma()
     {
         Rigidbody rb = grandmaObject.GetComponent<Rigidbody>();
         if (rb != null)
         {
-            Vector3 aimDirection = Quaternion.Euler(0f, directionAngle, 0f) * Vector3.forward;
-            Vector3 launchDirection = (aimDirection + Vector3.up).normalized;
+            rb.isKinematic = true;
+            grandmaObject.transform.position = throwPoint.position;
+            Vector3 horizontalDirection = Quaternion.Euler(0f, directionAngle, 0f) * Vector3.forward;
+            grandmaObject.transform.rotation = Quaternion.LookRotation(horizontalDirection, Vector3.up);
 
             rb.isKinematic = false;
             rb.linearDamping = 0.2f;
             rb.angularDamping = 2f;
-            Physics.gravity = new Vector3(0, -1.5f, 0); // light gravity
+            Physics.gravity = new Vector3(0, -1.5f, 0);
             rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
 
+            Vector3 launchDirection = GetLaunchDirection().normalized;
             rb.AddForce(launchDirection * throwForce, ForceMode.Impulse);
 
-            // Prevent bouncing
-            Collider col = grandmaObject.GetComponent<Collider>();
-            if (col != null)
-            {
-                PhysicsMaterial noBounce = new PhysicsMaterial();
-                noBounce.bounciness = 0f;
-                noBounce.bounceCombine = PhysicsMaterialCombine.Minimum;
-                noBounce.frictionCombine = PhysicsMaterialCombine.Average;
-                col.material = noBounce;
-            }
-
-            // Activate grandma flight control
             GrandmaAirControl airControl = grandmaObject.GetComponent<GrandmaAirControl>();
             if (airControl != null)
             {
                 airControl.StartFlying();
             }
 
-            // Camera follow
+            Animator grandmaAnim = grandmaObject.GetComponentInChildren<Animator>();
+            if (grandmaAnim != null)
+            {
+                grandmaAnim.SetTrigger("Fly");
+            }
+
             GrandmaCameraFollow camFollow = Camera.main.GetComponent<GrandmaCameraFollow>();
             if (camFollow != null)
             {
                 camFollow.target = grandmaObject.transform;
             }
-
-            Debug.Log("THROW! Grandma launched at angle: " + directionAngle.ToString("F2") + "°");
         }
+        rb.linearVelocity = GetLaunchDirection().normalized * throwForce;
+
     }
 
-    void UpdateTrajectoryLine(float angle)
+
+
+    void UpdateTrajectoryLine()
     {
-        Vector3 aimDirection = Quaternion.Euler(0f, angle, 0f) * Vector3.forward;
-        Vector3 launchDirection = (aimDirection + Vector3.up).normalized;
-        Vector3 velocity = launchDirection * throwForce;
+        Vector3 velocity = GetLaunchDirection().normalized * throwForce;
 
         lineRenderer.positionCount = trajectoryPoints;
         Vector3[] points = new Vector3[trajectoryPoints];
@@ -197,5 +180,13 @@ public class ThrowController : MonoBehaviour
     void HideTrajectory()
     {
         lineRenderer.positionCount = 0;
+    }
+    // Helper to get launch direction
+    private Vector3 GetLaunchDirection()
+    {
+        Quaternion yaw = Quaternion.Euler(0f, directionAngle, 0f);
+        Vector3 forwardDir = yaw * Vector3.forward;
+        Vector3 launchDir = (forwardDir + Vector3.up * 0.5f).normalized; // Less vertical
+        return launchDir;
     }
 }

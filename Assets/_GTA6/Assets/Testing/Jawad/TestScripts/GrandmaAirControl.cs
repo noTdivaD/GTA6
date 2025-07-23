@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class GrandmaAirControl : MonoBehaviour
 {
+    private bool hasPlayerGivenInput = false;
+
     public ParticleSystem boostParticles;
 
     private float lastDiveHeight;
@@ -28,6 +30,9 @@ public class GrandmaAirControl : MonoBehaviour
     [Header("New Mechanics")]
     public float boostForce = 60f;
     public float diveForce = 25f;
+    private bool justLaunched = true;
+    private float launchTimer = 0f;
+    public float airControlDelay = 0.2f; // Time in seconds before air control starts
 
     void Start()
     {
@@ -56,14 +61,38 @@ public class GrandmaAirControl : MonoBehaviour
     {
         if (!isFlying || hasLanded) return;
 
+        if (justLaunched)
+        {
+            launchTimer += Time.fixedDeltaTime;
+            if (launchTimer < airControlDelay)
+                return; // Wait before enabling air control
+
+            // Wait for actual input before enabling control
+            float hInput = Input.GetAxisRaw("Horizontal");
+            bool boostPressed = Input.GetKey(KeyCode.W);
+            bool divePressed = Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl);
+
+            if (Mathf.Abs(hInput) > 0.01f || boostPressed || divePressed)
+            {
+                hasPlayerGivenInput = true;
+                justLaunched = false;
+            }
+            else
+            {
+                return; // Still coasting without input
+            }
+        }
+
+
+
         float input = Input.GetAxis("Horizontal");
 
-        // Immediate left/right strafing — override X/Z velocity directly
-        Vector3 currentVelocity = rb.linearVelocity;
-        Vector3 desiredStrafe = transform.right * input * strafeForce;
-
-        // Keep Y velocity untouched, override only horizontal direction
-        rb.linearVelocity = new Vector3(desiredStrafe.x, currentVelocity.y, desiredStrafe.z + currentVelocity.z);
+        // Strafe (additive, not override)
+        if (Mathf.Abs(input) > 0.01f)
+        {
+            Vector3 strafe = transform.right * input * strafeForce;
+            rb.AddForce(strafe, ForceMode.Acceleration);
+        }
 
         // Constant forward glide
         Vector3 glide = transform.forward * forwardGlideForce;
@@ -132,8 +161,11 @@ public class GrandmaAirControl : MonoBehaviour
 
     public void StartFlying()
     {
+        hasPlayerGivenInput = false;
         isFlying = true;
         hasLanded = false;
+        justLaunched = true;
+        launchTimer = 0f;
 
         if (rb != null)
         {

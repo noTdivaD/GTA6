@@ -882,6 +882,11 @@ RectTransform:
   m_AnchoredPosition: {x: -5, y: 0}
   m_SizeDelta: {x: -20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!4 &1682534275 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2069857631479328385, guid: 97846e0850375fc43a67eb20e8881c40, type: 3}
+  m_PrefabInstance: {fileID: 2983731134432830654}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1686753126 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2089404836137737121, guid: 97846e0850375fc43a67eb20e8881c40, type: 3}
@@ -1240,6 +1245,10 @@ PrefabInstance:
       propertyPath: strafeForce
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 4371456980935992422, guid: 97846e0850375fc43a67eb20e8881c40, type: 3}
+      propertyPath: grandmaModel
+      value: 
+      objectReference: {fileID: 1682534275}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
