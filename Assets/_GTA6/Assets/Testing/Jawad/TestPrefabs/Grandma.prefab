@@ -128,7 +128,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 1
   m_Constraints: 80
   m_CollisionDetection: 0
@@ -145,10 +145,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boostParticles: {fileID: 1711620098307927597}
-  grandmaModel: {fileID: 3623077872582803779}
+  grandmaModel: {fileID: 2069857631479328385}
   tiltAngle: 20
   tiltSpeed: 5
-  strafeForce: 5
+  strafeForce: 20
   forwardGlideForce: 1
   maxHorizontalSpeed: 5
   groundLayer:
@@ -157,6 +157,7 @@ MonoBehaviour:
   groundCheckDistance: 1
   boostForce: 60
   diveForce: 25
+  airControlDelay: 0.2
 --- !u!1 &6641092031863963804
 GameObject:
   m_ObjectHideFlags: 0
