@@ -58,7 +58,7 @@ public class GameOverUIManager : MonoBehaviour
 
     // Restart button
     public void RestartGame()
-    {
+    {   
         // Reset the game state and reload the current scene
         GameManager.Instance.ResetGameState();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

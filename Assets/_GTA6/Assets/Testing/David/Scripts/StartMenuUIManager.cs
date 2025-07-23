@@ -8,11 +8,15 @@ public class StartMenuUIManager : MonoBehaviour
     [SerializeField] private GameObject pressAnyButtonPanel;
     [SerializeField] private GameObject startMenuPanel;
     [SerializeField] private bool hasPressedButton = false;
+    [SerializeField] private Camera cameraComponent;
+    [SerializeField] private Vector3 targetPosition;
 
     void Start()
     {
         pressAnyButtonPanel.SetActive(true);
         startMenuPanel.SetActive(false);
+
+        targetPosition = new Vector3(0f, 0f, 45f);
     }
 
     void Update()
@@ -44,6 +48,9 @@ public class StartMenuUIManager : MonoBehaviour
         pressAnyButtonPanel.SetActive(false);
         startMenuPanel.SetActive(true);
 
+        // Camera moves forward with Lerp
+        cameraComponent.transform.position = Vector3.Lerp(cameraComponent.transform.position, targetPosition, 0.1f);
+
         // Fade in
         CanvasGroup menuGroup = startMenuPanel.GetComponent<CanvasGroup>();
         if (menuGroup != null)
@@ -63,7 +70,7 @@ public class StartMenuUIManager : MonoBehaviour
     public void PlayGame()
     {
         // remember to add the scene to build settings
-        SceneManager.LoadScene("Jawad");
+        SceneManager.LoadScene("MainScene");
     }
 
     // Quit Button
