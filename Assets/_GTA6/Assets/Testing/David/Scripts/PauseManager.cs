@@ -6,6 +6,7 @@ public class PauseManager : MonoBehaviour
 {
     [Header("Pause Panel Element")]
     [SerializeField] public GameObject pausePanel;
+    private bool allowPause = false;
 
     void Awake()
     {
@@ -23,6 +24,15 @@ public class PauseManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        string sceneName = scene.name;
+        allowPause = sceneName != "StartMenu" && sceneName != "Bootstrap";
+
+        if (!allowPause)
+        {
+            Debug.Log("[PauseManager] Pausing is disabled in this scene.");
+            return;
+        }
+
         // Try to find by name in the Canvas
         GameObject canvas = GameObject.Find("Canvas");
 
@@ -65,8 +75,14 @@ public class PauseManager : MonoBehaviour
     {
         Debug.Log("[PauseManager] Pausing the game...");
 
+        if (!allowPause)
+        {
+            Debug.Log("[PauseManager] Pause is disabled in this scene.");
+            return;
+        }
+
         // Show the pause panel and freeze time
-        if(pausePanel != null)
+        if (pausePanel != null)
         {
             Debug.Log("[PauseManager] Pause success.");
             pausePanel.SetActive(true);

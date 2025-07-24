@@ -23,6 +23,12 @@ public class GameOverManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if(scene.name == "StartMenu" || scene.name == "Bootstrap")
+        {
+            Debug.Log("[GameOverManager] Game Over is disabled in this scene.");
+            return;
+        }
+
         // Try to find by name in the Canvas
         GameObject canvas = GameObject.Find("Canvas");
         if (canvas != null)
