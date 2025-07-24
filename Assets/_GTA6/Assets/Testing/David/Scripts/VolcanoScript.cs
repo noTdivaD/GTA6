@@ -7,7 +7,7 @@ public class VolcanoScript : MonoBehaviour
     [SerializeField] private float spiralSpeed = 2f;
     [SerializeField] private float flushSpeed = 3f;
     [SerializeField] private float shakeAmount = 0.01f;
-
+    public string karenGameOverSFX = "KarenGameOver"; // Name of the SFX to play when the player is flushed
     void OnTriggerEnter(Collider other)
     {
         // Only affect objects with Rigidbody
@@ -26,6 +26,16 @@ public class VolcanoScript : MonoBehaviour
 
             // Disable gravity and flush the object
             otherRigidBody.useGravity = false;
+
+            if(karenGameOverSFX != null && karenGameOverSFX != "")
+            {
+                AudioClip karenClip = AudioManager.Instance.GetClipByName(karenGameOverSFX, AudioManager.Instance.characterSfxClips);
+                if (karenClip != null)
+                {
+                    AudioManager.Instance.PlayCharacterSFX(karenClip);
+                }
+            }
+
             StartCoroutine(VolcanoFlush(otherRigidBody));
         }
     }

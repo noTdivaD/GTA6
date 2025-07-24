@@ -10,6 +10,7 @@ public class StartMenuUIManager : MonoBehaviour
     [SerializeField] private bool hasPressedButton = false;
     [SerializeField] private Camera cameraComponent;
     [SerializeField] private Vector3 targetPosition;
+    public string karenName = "MyNameKaren";
 
     void Start()
     {
@@ -45,8 +46,19 @@ public class StartMenuUIManager : MonoBehaviour
         }
 
         // Switch scene
+
         pressAnyButtonPanel.SetActive(false);
         startMenuPanel.SetActive(true);
+        if (karenName != null && karenName != "")
+        {
+            AudioClip karenClip = AudioManager.Instance.GetClipByName(karenName, AudioManager.Instance.characterSfxClips);
+            if (karenClip != null)
+            {
+                AudioManager.Instance.PlayCharacterSFX(karenClip);
+            }
+
+
+        }
 
         // Camera moves forward with Lerp
         cameraComponent.transform.position = Vector3.Lerp(cameraComponent.transform.position, targetPosition, 0.1f);
