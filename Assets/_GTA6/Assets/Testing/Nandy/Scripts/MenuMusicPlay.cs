@@ -17,16 +17,16 @@ public class MenuMusicPlay : MonoBehaviour
          
             
         }
-        if (karenName != null && karenName != "")
-        {
-            AudioClip karenClip = AudioManager.Instance.GetClipByName(musicClipName, AudioManager.Instance.characterSfxClips);
-            if ( karenClip!= null)
-            {
-                AudioManager.Instance.PlayCharacterSFX(karenClip);
-            }
+        //if (karenName != null && karenName != "")
+        //{
+        //    AudioClip karenClip = AudioManager.Instance.GetClipByName(musicClipName, AudioManager.Instance.characterSfxClips);
+        //    if ( karenClip!= null)
+        //    {
+        //        AudioManager.Instance.PlayCharacterSFX(karenClip);
+        //    }
 
 
-        }
+        //}
     }
 
     // Update is called once per frame
