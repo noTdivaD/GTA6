@@ -4303,6 +4303,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4371456980935992422, guid: 97846e0850375fc43a67eb20e8881c40, type: 3}
+      propertyPath: tiltAngle
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 4371456980935992422, guid: 97846e0850375fc43a67eb20e8881c40, type: 3}
       propertyPath: groundLayer.m_Bits
       value: 64
       objectReference: {fileID: 0}
