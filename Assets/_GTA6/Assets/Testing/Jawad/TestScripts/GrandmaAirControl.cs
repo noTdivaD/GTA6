@@ -158,6 +158,7 @@ public class GrandmaAirControl : MonoBehaviour
                 boostParticles.Stop();
 
             Debug.Log("Grandma has landed!");
+            GameManager.Instance.GameOver();
         }
     }
 

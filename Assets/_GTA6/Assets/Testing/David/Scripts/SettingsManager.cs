@@ -24,15 +24,15 @@ public class SettingsManager : MonoBehaviour
     // Open Settings Menu
     public void OpenSettings()
     {
+        Debug.Log("[SettingsManager] Opening settings menu...");
         settingsUI.SetActive(true);
-        Time.timeScale = 0f;
         pauseVolume.weight = 1f;
     }
 
     // Close Settings Menu
     public void CloseSettings()
     {
-        Time.timeScale = 1f;
+        Debug.Log("[SettingsManager] Closing settings menu...");
         settingsUI.SetActive(false);
         pauseVolume.weight = 0f;
     }
