@@ -7,22 +7,22 @@ public class AudioManager : MonoBehaviour
 {
 
     [Header("Music Clips")]
-    public List<NamedAudioClip> musicClips;
+    public List<NamedAudioClip> musicClips = new List<NamedAudioClip>();
 
     [Header("Menu Music Clips")]
-    public List<NamedAudioClip> menuMusicClips;
+    public List<NamedAudioClip> menuMusicClips = new List<NamedAudioClip>();
 
     [Header("SFX Clips")]
-    public List<NamedAudioClip> sfxClips;
+    public List<NamedAudioClip> sfxClips = new List<NamedAudioClip>();
 
     [Header("Menu SFX Clips")]
-    public List<NamedAudioClip> menuSfxClips;
+    public List<NamedAudioClip> menuSfxClips = new List<NamedAudioClip>();
 
     [Header("Environment SFX Clips")]
-    public List<NamedAudioClip> environmentSfxClips;
+    public List<NamedAudioClip> environmentSfxClips = new List<NamedAudioClip>();
 
     [Header("Character SFX Clips")]
-    public List<NamedAudioClip> characterSfxClips;
+    public List<NamedAudioClip> characterSfxClips = new List<NamedAudioClip>();
     public static AudioManager Instance { get; private set; }
 
     public AudioSource musicSource;
@@ -42,6 +42,7 @@ public class AudioManager : MonoBehaviour
         }
 
         Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
 
@@ -80,15 +81,33 @@ public class AudioManager : MonoBehaviour
     {
         characterSfxSource.PlayOneShot(clip);
     }
-
-    public AudioClip GetSFXClipByName(string name)
+    public void PlayLoopingEnvironmentSFX(AudioClip clip)
     {
-        foreach (NamedAudioClip namedClip in sfxClips)
+        if (environmentSfxSource.clip == clip && environmentSfxSource.isPlaying)
+            return;
+
+        environmentSfxSource.clip = clip;
+        environmentSfxSource.loop = true;
+        environmentSfxSource.Play();
+    }
+
+    public void StopLoopingEnvironmentSFX()
+    {
+        if (environmentSfxSource.isPlaying)
+            environmentSfxSource.Stop();
+
+        environmentSfxSource.clip = null;
+        environmentSfxSource.loop = false;
+    }
+
+    public AudioClip GetClipByName(string name, List<NamedAudioClip> clipList)
+    {
+        foreach (NamedAudioClip namedClip in clipList)
         {
             if (namedClip.name == name)
                 return namedClip.clip;
         }
-        Debug.LogWarning($"SFX Clip '{name}' not found!");
+        Debug.LogWarning($"Audio Clip '{name}' not found in provided list!");
         return null;
     }
 }

@@ -34,6 +34,11 @@ public class GrandmaAirControl : MonoBehaviour
     private float launchTimer = 0f;
     public float airControlDelay = 0.2f; // Time in seconds before air control starts
 
+    public string landingSFXName = "LandingSFX"; // Name of the landing sound effect
+
+    //public string windSFXName = "WindSFX"; // Name of the wind sound effect
+
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -43,6 +48,15 @@ public class GrandmaAirControl : MonoBehaviour
     void Update()
     {
         if (!isFlying || hasLanded) return;
+
+        //if (windSFXName != null && windSFXName != "")
+        //{
+        //    AudioClip windClip = AudioManager.Instance.GetClipByName(windSFXName, AudioManager.Instance.environmentSfxClips);
+        //    if (windClip != null)
+        //    {
+        //        AudioManager.Instance.PlayLoopingEnvironmentSFX(windClip);
+        //    }
+        //}
 
         float horizontalInput = Input.GetAxis("Horizontal");
 
@@ -156,6 +170,15 @@ public class GrandmaAirControl : MonoBehaviour
 
             if (boostParticles != null)
                 boostParticles.Stop();
+            if(landingSFXName != null && landingSFXName != "")
+            {
+                AudioClip landingClip = AudioManager.Instance.GetClipByName(landingSFXName, AudioManager.Instance.characterSfxClips);
+                if (landingClip != null)
+                {
+                    AudioManager.Instance.PlayCharacterSFX(landingClip);
+                }
+            }
+
 
             Debug.Log("Grandma has landed!");
             GameManager.Instance.GameOver();

@@ -36,6 +36,10 @@ public class ThrowController : MonoBehaviour
     private int directionSign = 1;
     public float throwElevation = 45f; // <-- Make this public and set a default
 
+
+    public string punchSFXName = "PunchSFX"; // Name of the punch sound effect
+    public string windSFXName = "WindSFX"; // Name of the wind sound effect
+    public string karenManagerLine = "KarenManagerLine"; // Name of the Karen manager line
     void Start()
     {
         animator = GetComponentInChildren<Animator>();
@@ -67,6 +71,16 @@ public class ThrowController : MonoBehaviour
             lineRenderer.enabled = true;
 
             Debug.Log("Demon is deciding... Throwing in " + waitTime.ToString("F2") + " seconds.");
+            
+            if(karenManagerLine != null && karenManagerLine != "")
+            {
+                AudioClip karenClip = AudioManager.Instance.GetClipByName(karenManagerLine, AudioManager.Instance.characterSfxClips);
+                if (karenClip != null)
+                {
+                    AudioManager.Instance.PlayCharacterSFX(karenClip);
+                }
+            }
+
         }
 
         if (isDecidingDirection)
@@ -118,6 +132,7 @@ public class ThrowController : MonoBehaviour
                 if (throwTimerBar != null)
                     throwTimerBar.value = 1f;
             }
+          
         }
     }
 
@@ -160,6 +175,22 @@ public class ThrowController : MonoBehaviour
             }
         }
         rb.linearVelocity = GetLaunchDirection().normalized * throwForce;
+        if (punchSFXName != null && punchSFXName != "")
+        {
+            AudioClip punchClip = AudioManager.Instance.GetClipByName(punchSFXName, AudioManager.Instance.characterSfxClips);
+            if (punchClip != null)
+            {
+                AudioManager.Instance.PlayCharacterSFX(punchClip);
+            }
+        }
+        if (windSFXName != null && windSFXName != "")
+        {
+            AudioClip windClip = AudioManager.Instance.GetClipByName(windSFXName, AudioManager.Instance.environmentSfxClips);
+            if (windClip != null)
+            {
+                AudioManager.Instance.PlayLoopingEnvironmentSFX(windClip);
+            }
+        }
 
     }
 

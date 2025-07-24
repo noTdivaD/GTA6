@@ -11,7 +11,7 @@ public class DownCloudTrigger : MonoBehaviour
 
     public string playerTag = "Player";
     private CinemachineImpulseSource impulseSource;
-
+    public string downCloudSFXName = "DownCloudSFX"; // Name of the down cloud sound effect
     private void Awake()
     {
         impulseSource = GetComponent<CinemachineImpulseSource>();
@@ -28,7 +28,14 @@ public class DownCloudTrigger : MonoBehaviour
                 CinemachineImpulseSource impulse = GetComponent<CinemachineImpulseSource>();
                 if (impulse != null)
                     impulse.GenerateImpulse();
-
+                if (downCloudSFXName != null && downCloudSFXName != "")
+                {
+                    AudioClip downCloudCLip = AudioManager.Instance.GetClipByName(downCloudSFXName, AudioManager.Instance.sfxClips);
+                    if (downCloudCLip != null)
+                    {
+                        AudioManager.Instance.PlaySFX(downCloudCLip);
+                    }
+                }
                 // Slow time
                 StartCoroutine(ShortSlowMotion());//  Trigger camera shake
 

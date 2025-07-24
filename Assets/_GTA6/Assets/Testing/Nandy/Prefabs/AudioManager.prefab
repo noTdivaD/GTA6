@@ -45,7 +45,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -174,7 +174,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.6
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -303,7 +303,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -432,7 +432,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -525,7 +525,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3056666028511323311}
-  - component: {fileID: 3730551239097061707}
+  - component: {fileID: 5290554958744242450}
   m_Layer: 0
   m_Name: AudioManager
   m_TagString: Untagged
@@ -554,7 +554,7 @@ Transform:
   - {fileID: 4195464259440486151}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3730551239097061707
+--- !u!114 &5290554958744242450
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -563,9 +563,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 7107081362069474728}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f4bb6893b044e843a7314cf63db4002, type: 3}
+  m_Script: {fileID: 11500000, guid: 40afabaf2203ac046af42fbcde463e92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  musicClips:
+  - name: MainTheme
+    clip: {fileID: 8300000, guid: 13478f630484c014f9bba19c176a31a8, type: 3}
+  menuMusicClips:
+  - name: MenuTheme
+    clip: {fileID: 0}
+  sfxClips:
+  - name: GeyserWooshSFX
+    clip: {fileID: 8300000, guid: 0d5c927529119a4429e84abebb855636, type: 3}
+  - name: DownCloudSFX
+    clip: {fileID: 8300000, guid: 90a3889aad9339a40a1dab966bec8582, type: 3}
+  menuSfxClips:
+  - name: 
+    clip: {fileID: 0}
+  environmentSfxClips:
+  - name: WindSFX
+    clip: {fileID: 8300000, guid: cca7f2ac6e12d1044954b92606c993ea, type: 3}
+  characterSfxClips:
+  - name: PunchSFX
+    clip: {fileID: 8300000, guid: e78289cd34affd441adcba7612d2e329, type: 3}
+  - name: LandingSFX
+    clip: {fileID: 8300000, guid: a53d6537f03a2a549aff027946d50fee, type: 3}
+  - name: KarenManagerLine
+    clip: {fileID: 8300000, guid: 83b92721695974e47aaf5aa2cda38eac, type: 3}
   musicSource: {fileID: 184086722136073173}
   menuMusicSource: {fileID: 807464953163318932}
   sfxSource: {fileID: 7212664514337582155}
@@ -617,7 +641,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -746,7 +770,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 1
   Mute: 0

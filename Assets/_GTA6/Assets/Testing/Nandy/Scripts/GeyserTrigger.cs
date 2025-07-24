@@ -9,6 +9,8 @@ public class GeyserTrigger : MonoBehaviour
     public string playerTag = "Player";
     public float forceApplyDuration = 0.1f;
 
+    public string geyserSFXName = "GeyserWooshSFX"; // Name of the geyser sound effect
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(playerTag))
@@ -20,6 +22,14 @@ public class GeyserTrigger : MonoBehaviour
 
                 TimedForceApplier applier = other.gameObject.AddComponent<TimedForceApplier>();
                 applier.ApplyForce(launchDirection, forceApplyDuration); // Apply over 0.15 seconds
+            }
+            if(geyserSFXName != null && geyserSFXName != "")
+            {
+                AudioClip geyserClip = AudioManager.Instance.GetClipByName(geyserSFXName, AudioManager.Instance.sfxClips);
+                if (geyserClip != null)
+                {
+                    AudioManager.Instance.PlaySFX(geyserClip);
+                }
             }
         }
     }

@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &6000757558358701885
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3150737622965683484}
+  m_Layer: 0
+  m_Name: PuffSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3150737622965683484
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6000757558358701885}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.54, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4221552995083352158}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7369883308412332973
 GameObject:
   m_ObjectHideFlags: 0
@@ -14,9 +45,10 @@ GameObject:
   - component: {fileID: 2034029104578092785}
   - component: {fileID: 696293386525038740}
   - component: {fileID: 1559976754178206596}
+  - component: {fileID: 4050219728931612823}
   m_Layer: 0
   m_Name: DownCloud
-  m_TagString: Untagged
+  m_TagString: DownCloud
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,9 +63,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -43, y: 47, z: 87.5}
-  m_LocalScale: {x: 15, y: -0.0958115, z: 15}
+  m_LocalScale: {x: 15, y: -4.36, z: 15}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3150737622965683484}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &5682018827779063409
@@ -67,7 +100,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9161f1a2968f31242a287bb3d51b5b96, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -109,9 +142,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5000001
-  m_Height: 843.01
+  m_Height: 51.2
   m_Direction: 1
-  m_Center: {x: 0.00000006357829, y: 342.4, z: -0.00000009536744}
+  m_Center: {x: 0.00000006357829, y: 0, z: -0.00000009536744}
 --- !u!114 &696293386525038740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,6 +161,7 @@ MonoBehaviour:
   slowMotionDuration: 0.2
   slowMotionScale: 0.3
   playerTag: Player
+  downCloudSFXName: DownCloudSFX
 --- !u!114 &1559976754178206596
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,3 +215,26 @@ MonoBehaviour:
     DissipationDistance: 100
     PropagationSpeed: 343
   DefaultVelocity: {x: 0, y: -1, z: 0}
+--- !u!114 &4050219728931612823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7369883308412332973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e889a5517c152c4c94e3fcc7dd1caee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  puffPool: {fileID: 0}
+  spawnInterval: 0.05
+  spawnPoint: {fileID: 3150737622965683484}
+  spawnRadius: 5
+  puffRiseSpeed: 50
+  puffLifetime: 2
+  puffYRotationSpeed: 90
+  puffColor: {r: 1, g: 0.19508043, b: 0, a: 1}
+  puffXScaleRange: {x: 2, y: 3}
+  puffYScaleRange: {x: 1, y: 2}
+  moveDirection: {x: 0, y: -1, z: 0}
